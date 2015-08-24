@@ -112,7 +112,7 @@ if [ ! -h "$INSTALL_ROOT/PhpStorm" ]; then
   chown $CURRENT_USER:$CURRENT_USER_GROUP -R "$INSTALL_ROOT/PhpStorm"
 fi
 
-if [ -n "$BIN_ROOT" ] && [[ ! -h "$BIN_ROOT/phpstorm" ]  || [ "$(readlink $BIN_ROOT/phpstorm)" != "$INSTALL_ROOT/PhpStorm" ]]; then
+if [ -n "$BIN_ROOT" ] && [ "$(readlink $BIN_ROOT/phpstorm)" != "$INSTALL_ROOT/PhpStorm" ]; then
   echo "Updating bin..."
   rm -f "$INSTALL_ROOT/PhpStorm"
   ln -s "$INSTALL_ROOT/PhpStorm/bin/phpstorm.sh" "$BIN_ROOT/phpstorm"
