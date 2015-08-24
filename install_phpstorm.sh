@@ -43,7 +43,7 @@ if [ -n "$phpstorm_version" ]; then
   echo 'Asked PhpStorm Version: '$phpstorm_version
 elif [ -n "$EAP" ]; then
   # Parse PhpStorm EAP page to get the last EAP version
-  phpstorm_version=`curl https://confluence.jetbrains.com/display/PhpStorm/PhpStorm+Early+Access+Program 2>/dev/null | grep "Download version" | sed "s/.*Download version[^E]\+EAP \([^,]\+\),.*/\1/" `
+  phpstorm_version=`curl https://confluence.jetbrains.com/display/PhpStorm/PhpStorm+Early+Access+Program 2>/dev/null | grep "Download version" | grep "EAP" | sed "s/.*Download version[^E]\+EAP \([^,]\+\),.*/\1/" `
   echo 'Last PhpStorm EAP Version: '$phpstorm_version
 else
   # Parse jetbrains version.js  to get the last PhpStorm version
@@ -52,11 +52,12 @@ else
 fi
 
 version_checked=$(echo $phpstorm_version | sed -e '/^[0-9\.]*$/d')
-if [[ -n "$version_checked" ]]; then
+if [ -z "$phpstorm_version" ] || [ -n "$version_checked" ]; then
     echo 'Sorry, the PhpStorm Version format is incorrect.'
     exit 1
 fi
 
+exit;
 if [ -n "$EAP" ]; then
   phpstorm_archive="PhpStorm-EAP-$phpstorm_version.tar.gz"
 else
