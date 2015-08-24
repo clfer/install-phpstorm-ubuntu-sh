@@ -57,7 +57,6 @@ if [ -z "$phpstorm_version" ] || [ -n "$version_checked" ]; then
     exit 1
 fi
 
-exit;
 if [ -n "$EAP" ]; then
   phpstorm_archive="PhpStorm-EAP-$phpstorm_version.tar.gz"
 else
