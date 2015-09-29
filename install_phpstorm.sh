@@ -84,7 +84,9 @@ else
   tar -xzf "$INSTALL_ROOT/$phpstorm_archive" -C "$INSTALL_ROOT"
   INSTALL_DIR=`tar tzf "$INSTALL_ROOT/$phpstorm_archive" | head -1 | sed -e 's/\/.*//'`
   rm -f "$INSTALL_ROOT/$phpstorm_archive"
-  mv "$INSTALL_ROOT/$INSTALL_DIR" "$INSTALL_ROOT/PhpStorm-$phpstorm_version"
+  if [ "$INSTALL_DIR" != "PhpStorm-$phpstorm_version" ]; then
+    mv "$INSTALL_ROOT/$INSTALL_DIR" "$INSTALL_ROOT/PhpStorm-$phpstorm_version"
+  fi
   chown $CURRENT_USER:$CURRENT_USER_GROUP -R "$INSTALL_ROOT/PhpStorm-$phpstorm_version"
 
   ask_for_symlink=true
