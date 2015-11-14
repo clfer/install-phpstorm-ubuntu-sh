@@ -16,6 +16,8 @@ if [ -z $CURRENT_USER_GROUP ]; then
   CURRENT_USER_GROUP=$CURRENT_USER
 fi
 
+confirmation_step=true
+
 # Parse arguments
 while [[ $# > 0 ]]
 do
@@ -28,6 +30,9 @@ case $key in
     -V|--version)
     phpstorm_version="$2"
     shift # past argument
+    ;;
+    -y)
+    confirmation_step=false
     ;;
     *) # unknown option
     echo "Unknown parameter: $1"
@@ -57,7 +62,7 @@ if [ -z "$phpstorm_version" ] || [ -n "$version_checked" ]; then
     exit 1
 fi
 
-while true; do
+while $confirmation_step; do
     read -p "Do you wish to install this version? (y/n) " yn
     case $yn in
         [Yy]* ) break;;
@@ -102,11 +107,12 @@ else
 fi
 
 if [ -h "$INSTALL_ROOT/PhpStorm" ] && [ "$ask_for_symlink" = true ]; then
-  while true; do
-      read -p "Do you want to update symlink (y/N)? " yn
+  update_symlink=true;
+  while $confirmation_step; do
+      read -p "Do you want to update symlink? (Y/n) " yn
       case $yn in
-          [Yy]* ) update_symlink=true; break;;
-          [Nn]* ) break;;
+          [Yy]* ) break;;
+          [Nn]* ) update_symlink=false; break;;
           * ) break;;
       esac
   done
