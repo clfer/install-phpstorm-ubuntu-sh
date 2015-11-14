@@ -63,11 +63,11 @@ if [ -z "$phpstorm_version" ] || [ -n "$version_checked" ]; then
 fi
 
 while $confirmation_step; do
-    read -p "Do you wish to install this version? (y/n) " yn
+    read -p "Do you wish to install this version? (Y/n) " yn
     case $yn in
         [Yy]* ) break;;
         [Nn]* ) exit;;
-        * ) echo "Please answer yes or no.";;
+        * ) break;;
     esac
 done
 
