@@ -57,6 +57,15 @@ if [ -z "$phpstorm_version" ] || [ -n "$version_checked" ]; then
     exit 1
 fi
 
+while true; do
+    read -p "Do you wish to install this version? (y/n) " yn
+    case $yn in
+        [Yy]* ) break;;
+        [Nn]* ) exit;;
+        * ) echo "Please answer yes or no.";;
+    esac
+done
+
 if [ -n "$EAP" ]; then
   phpstorm_archive="PhpStorm-EAP-$phpstorm_version.tar.gz"
 else
