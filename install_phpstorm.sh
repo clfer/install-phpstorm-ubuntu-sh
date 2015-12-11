@@ -51,8 +51,8 @@ elif [ -n "$EAP" ]; then
   phpstorm_version=`curl https://confluence.jetbrains.com/display/PhpStorm/PhpStorm+Early+Access+Program 2>/dev/null | grep "Download version" | sed -ne "s/^.*Download version[^E]\+EAP \([^,]\+\),.*$/\1/p" `
   echo 'Last PhpStorm EAP Version: '$phpstorm_version
 else
-  # Parse jetbrains version.js  to get the last PhpStorm version
-  phpstorm_version=`curl https://www.jetbrains.com/js2/version.js 2>/dev/null | grep "var versionPhpStormLong" | sed -ne "s/^.*versionPhpStormLong = \"\([^\"]\+\)\".*$/\1/p" `
+  # Parse jetbrains releases API return to get the last PhpStorm version
+  phpstorm_version=`curl https://data.services.jetbrains.com/products/releases?code=PS 2>/dev/null | grep "\"version\"" | sed -ne "s/^.*\"version\":\"\([^\"]\+\)\".*$/\1/p" `
   echo 'Last PhpStorm Version: '$phpstorm_version
 fi
 
