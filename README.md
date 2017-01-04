@@ -21,12 +21,12 @@ sudo ./install_phpstorm.sh --eap
 
 ```
 #install specific stable release
-sudo ./install_phpstorm.sh -v 9.0.1
+sudo ./install_phpstorm.sh -V 9.0.1
 ```
 
 ```
 #install specific eap release
-sudo ./install_phpstorm.sh --eap -v 141.1412
+sudo ./install_phpstorm.sh --eap -V 141.1412
 ```
 
 Launch PhpStorm:
