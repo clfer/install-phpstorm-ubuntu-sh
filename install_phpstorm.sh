@@ -3,13 +3,13 @@
 function get_phpstorm_last_eap_version()
 {
   # Parse PhpStorm EAP page to get the last EAP version
-  phpstorm_last_eap_version=`curl https://www.jetbrains.com/phpstorm/eap/ 2>/dev/null | grep "PhpStorm-EAP" | grep "tar.gz" | sed -ne "s/^.*PhpStorm-EAP-\([0-9\.]\+\)\.tar\.gz.*$/\1/p" `
+  phpstorm_last_eap_version=`curl https://data.services.jetbrains.com/products?code=PS\&release.type=eap 2>/dev/null | grep "\"build\"" | sed -ne "s/^.*\"build\":\"\([^\"]\+\)\".*$/\1/p"`
 }
 
 function get_phpstorm_last_stable_version()
 {
-    # Parse jetbrains releases API return to get the last PhpStorm version
-  phpstorm_last_stable_version=`curl https://data.services.jetbrains.com/products/releases?code=PS 2>/dev/null | grep "\"version\"" | sed -ne "s/^.*\"version\":\"\([^\"]\+\)\".*$/\1/p" `
+  # Parse jetbrains releases API return to get the last PhpStorm version
+  phpstorm_last_stable_version=`curl https://data.services.jetbrains.com/products/releases?code=PS\&release.type=release 2>/dev/null | sed -ne "s/,/,\n/gp" | grep "\"version\"" | head -1 | sed -ne "s/.*\"version\":\"\([^\"]\+\)\".*$/\1/p"`
 }
 
 ### Main script
@@ -64,11 +64,11 @@ if [ -n "$phpstorm_version" ]; then
 elif [ -n "$EAP" ]; then
   get_phpstorm_last_eap_version
   phpstorm_version=$phpstorm_last_eap_version;
-  echo 'Last PhpStorm EAP Version: '$phpstorm_version
+  echo "Last PhpStorm EAP Version: ${phpstorm_version}"
 else
   get_phpstorm_last_stable_version
   phpstorm_version=$phpstorm_last_stable_version;
-  echo 'Last PhpStorm Version: '$phpstorm_version
+  echo "Last PhpStorm Version: ${phpstorm_version}"
 fi
 
 version_checked=$(echo $phpstorm_version | sed -e '/^[0-9\.]*$/d')
