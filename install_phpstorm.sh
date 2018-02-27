@@ -71,7 +71,7 @@ else
   echo "Last PhpStorm Version: ${phpstorm_version}"
 fi
 
-version_checked=$(echo $phpstorm_version | sed -e '/^[0-9\.]*$/d')
+version_checked=$(echo $phpstorm_version | sed -e '/^\(EAP-\)\?[0-9\.]*$/d')
 if [ -z "$phpstorm_version" ] || [ -n "$version_checked" ]; then
     echo 'Sorry, the PhpStorm Version format is incorrect.'
     exit 1
@@ -86,11 +86,7 @@ while $confirmation_step; do
     esac
 done
 
-if [ -n "$EAP" ]; then
-  phpstorm_archive="PhpStorm-EAP-$phpstorm_version.tar.gz"
-else
-  phpstorm_archive="PhpStorm-$phpstorm_version.tar.gz"
-fi
+phpstorm_archive="PhpStorm-$phpstorm_version.tar.gz"
 
 phpstorm_download_link="http://download.jetbrains.com/webide/$phpstorm_archive"
 
