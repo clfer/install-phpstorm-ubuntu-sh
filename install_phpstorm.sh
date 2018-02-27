@@ -86,6 +86,7 @@ while $confirmation_step; do
     esac
 done
 
+#TODO For latest release and latest eap, use the download link provided in data.services.jetbrains.com instead of rewriting it here?
 phpstorm_archive="PhpStorm-$phpstorm_version.tar.gz"
 
 phpstorm_download_link="http://download.jetbrains.com/webide/$phpstorm_archive"
