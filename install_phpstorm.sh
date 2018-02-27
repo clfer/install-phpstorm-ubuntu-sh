@@ -1,4 +1,19 @@
 #!/usr/bin/env bash
+### Helper functions
+function get_phpstorm_last_eap_version()
+{
+  # Parse PhpStorm EAP page to get the last EAP version
+  phpstorm_last_eap_version=`curl https://data.services.jetbrains.com/products?code=PS\&release.type=eap 2>/dev/null | grep "\"build\"" | sed -ne "s/^.*\"build\":\"\([^\"]\+\)\".*$/\1/p"`
+}
+
+function get_phpstorm_last_stable_version()
+{
+  # Parse jetbrains releases API return to get the last PhpStorm version
+  phpstorm_last_stable_version=`curl https://data.services.jetbrains.com/products/releases?code=PS\&release.type=release 2>/dev/null | sed -ne "s/,/,\n/gp" | grep "\"version\"" | head -1 | sed -ne "s/.*\"version\":\"\([^\"]\+\)\".*$/\1/p"`
+}
+
+### Main script
+
 # Make sure only root can run our script
 if [[ $EUID -ne 0 ]]; then
    echo "This script must be run as root. Use sudo." 1>&2
@@ -47,16 +62,16 @@ done
 if [ -n "$phpstorm_version" ]; then
   echo 'Asked PhpStorm Version: '$phpstorm_version
 elif [ -n "$EAP" ]; then
-  # Parse PhpStorm EAP page to get the last EAP version
-  phpstorm_version=`curl https://confluence.jetbrains.com/display/PhpStorm/PhpStorm+Early+Access+Program 2>/dev/null | grep "PhpStorm-EAP" | grep "tar.gz" | sed -ne "s/^.*PhpStorm-EAP-\([0-9\.]\+\)\.tar\.gz.*$/\1/p" `
-  echo 'Last PhpStorm EAP Version: '$phpstorm_version
+  get_phpstorm_last_eap_version
+  phpstorm_version=$phpstorm_last_eap_version;
+  echo "Last PhpStorm EAP Version: ${phpstorm_version}"
 else
-  # Parse jetbrains releases API return to get the last PhpStorm version
-  phpstorm_version=`curl https://data.services.jetbrains.com/products/releases?code=PS 2>/dev/null | grep "\"version\"" | sed -ne "s/^.*\"version\":\"\([^\"]\+\)\".*$/\1/p" `
-  echo 'Last PhpStorm Version: '$phpstorm_version
+  get_phpstorm_last_stable_version
+  phpstorm_version=$phpstorm_last_stable_version;
+  echo "Last PhpStorm Version: ${phpstorm_version}"
 fi
 
-version_checked=$(echo $phpstorm_version | sed -e '/^[0-9\.]*$/d')
+version_checked=$(echo $phpstorm_version | sed -e '/^\(EAP-\)\?[0-9\.]*$/d')
 if [ -z "$phpstorm_version" ] || [ -n "$version_checked" ]; then
     echo 'Sorry, the PhpStorm Version format is incorrect.'
     exit 1
@@ -71,11 +86,8 @@ while $confirmation_step; do
     esac
 done
 
-if [ -n "$EAP" ]; then
-  phpstorm_archive="PhpStorm-EAP-$phpstorm_version.tar.gz"
-else
-  phpstorm_archive="PhpStorm-$phpstorm_version.tar.gz"
-fi
+#TODO For latest release and latest eap, use the download link provided in data.services.jetbrains.com instead of rewriting it here?
+phpstorm_archive="PhpStorm-$phpstorm_version.tar.gz"
 
 phpstorm_download_link="http://download.jetbrains.com/webide/$phpstorm_archive"
 
